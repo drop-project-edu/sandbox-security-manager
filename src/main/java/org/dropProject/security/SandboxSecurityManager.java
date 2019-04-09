@@ -9,11 +9,13 @@ import java.security.Permission;
 public class SandboxSecurityManager extends SecurityManager {
 
     private String workingFolder;
+    private String javaHome;
 
     private boolean debug = false;
 
     public SandboxSecurityManager() {
         this.workingFolder = new File("").getAbsolutePath();
+        this.javaHome = System.getProperty("java.home");
         if (System.getProperty("dropProject.securityManager.debug") != null) {
             debug = true;
             System.out.println("Using SandboxedSecurityManager");
@@ -49,9 +51,7 @@ public class SandboxSecurityManager extends SecurityManager {
             if (debug) {
                 System.out.println("SandboxedSecurityManager.checkRead: " + file);
             }
-            if (file.startsWith("/") && !file.startsWith(workingFolder)
-                    || file.startsWith("..")
-                    || file.startsWith("\\")) {
+            if (checkIllegalPath(file)) {
                 throw new SecurityException("Illegal file access (read): " + file);
             }
         } else {
@@ -65,9 +65,7 @@ public class SandboxSecurityManager extends SecurityManager {
             if (debug) {
                 System.out.println("SandboxedSecurityManager.checkWrite: " + file);
             }
-            if (file.startsWith("/") && !file.startsWith(workingFolder)
-                    || file.startsWith("..")
-                    || file.startsWith("\\")) {
+            if (checkIllegalPath(file)) {
                 throw new SecurityException("Illegal file access (write): " + file);
             }
         } else {
@@ -99,5 +97,11 @@ public class SandboxSecurityManager extends SecurityManager {
         }
 
         return false;
+    }
+
+    private boolean checkIllegalPath(String file) {
+        return file.startsWith("/") && !(file.startsWith(workingFolder) || file.startsWith(javaHome))
+                || file.startsWith("..")
+                || file.startsWith("\\");
     }
 }

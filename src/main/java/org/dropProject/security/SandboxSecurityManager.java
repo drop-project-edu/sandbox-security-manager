@@ -10,15 +10,19 @@ public class SandboxSecurityManager extends SecurityManager {
 
     private String workingFolder;
     private String javaHome;
+    private String mavenRepository;
 
     private boolean debug = false;
 
     public SandboxSecurityManager() {
         this.workingFolder = new File("").getAbsolutePath();
         this.javaHome = System.getProperty("java.home");
+        this.mavenRepository = System.getProperty("dropProject.maven.repository");
         if (System.getProperty("dropProject.securityManager.debug") != null) {
             debug = true;
-            System.out.println("Using SandboxedSecurityManager");
+            System.out.println("Using SandboxedSecurityManager with\n" +
+                    "\tjava.home=" + javaHome + "\n" +
+                    "\tmaven.repository=" + mavenRepository);
         }
     }
 
@@ -100,6 +104,13 @@ public class SandboxSecurityManager extends SecurityManager {
     }
 
     private boolean checkIllegalPath(String file) {
+
+        // allow access to files in the maven repository
+        // this is needed for example by junit5
+        if (mavenRepository != null && file.startsWith(mavenRepository)) {
+            return false;
+        }
+
         return file.startsWith("/") && !(file.startsWith(workingFolder) || file.startsWith(javaHome))
                 || file.startsWith("..")
                 || file.startsWith("\\");

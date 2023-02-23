@@ -16,9 +16,13 @@ Include the following dependency on your pom file:
     <dependency>
 	    <groupId>pt.ulusofona.deisi</groupId>
 	    <artifactId>drop-project-security-manager</artifactId>
-	    <version>0.1.1</version>
+	    <version>0.1.3</version>
 	</dependency>
 	
 Now, just set the security manager when calling your application like this:
 
     java -Djava.security.manager=org.dropProject.security.SandboxSecurityManager YourMainClass
+
+You can pass the location of the maven repository, if you want it excluded from verification:
+
+    java -Djava.security.manager=org.dropProject.security.SandboxSecurityManager -DdropProject.maven.repository=/Users/tester/.m2/repository YourMainClass

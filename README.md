@@ -14,11 +14,15 @@ Any of these will be detected by the Security Manager and will lead to a Securit
 Include the following dependency on your pom file:
 
     <dependency>
-	    <groupId>pt.ulusofona.deisi</groupId>
+	    <groupId>org.dropproject</groupId>
 	    <artifactId>drop-project-security-manager</artifactId>
-	    <version>0.1.1</version>
+	    <version>0.2.2</version>
 	</dependency>
 	
 Now, just set the security manager when calling your application like this:
 
-    java -Djava.security.manager=org.dropProject.security.SandboxSecurityManager YourMainClass
+    java -Djava.security.manager=org.dropproject.security.SandboxSecurityManager YourMainClass
+
+## Remarks
+
+Since this usually runs within Drop Project, it is expecting an environment variable `DP_MVN_REPO`

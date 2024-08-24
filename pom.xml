@@ -3,20 +3,25 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>pt.ulusofona.deisi</groupId>
+	<groupId>org.dropproject</groupId>
 	<artifactId>drop-project-security-manager</artifactId>
-	<version>0.1.1</version>
+	<version>0.2.2</version>
 	<packaging>jar</packaging>
 
 	<name>Drop Project Security Manager</name>
 	<description>Used by Drop Project to create a sandbox for students submissions</description>
 	<url>https://github.com/drop-project-edu/sandbox-security-manager</url>
 
+	<organization>
+		<name>Pedro Alves</name>
+	</organization>
+
+	<inceptionYear>2020</inceptionYear>
+
 	<licenses>
 		<license>
-			<name>MIT License</name>
-			<url>http://www.opensource.org/licenses/mit-license.php</url>
-			<distribution>repo</distribution>
+			<name>Apache 2.0</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
 		</license>
 	</licenses>
 
@@ -42,7 +47,7 @@
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>4.12</version>
+			<version>4.13</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
@@ -63,7 +68,7 @@
 				<artifactId>maven-surefire-plugin</artifactId>
 				<version>2.9</version>
 				<configuration>
-					<argLine>-Djava.security.manager=org.dropProject.security.SandboxSecurityManager</argLine>
+					<argLine>-Djava.security.manager=org.dropproject.security.SandboxSecurityManager -DDP_MVN_REPO=mvn</argLine>
 				</configuration>
 			</plugin>
 			<plugin>
@@ -107,15 +112,40 @@
 				</executions>
 			</plugin>
 			<plugin>
-				<groupId>org.sonatype.plugins</groupId>
-				<artifactId>nexus-staging-maven-plugin</artifactId>
-				<version>1.6.7</version>
+				<groupId>org.sonatype.central</groupId>
+				<artifactId>central-publishing-maven-plugin</artifactId>
+				<version>0.5.0</version>
 				<extensions>true</extensions>
 				<configuration>
-					<serverId>ossrh</serverId>
-					<nexusUrl>https://oss.sonatype.org/</nexusUrl>
-					<autoReleaseAfterClose>true</autoReleaseAfterClose>
+					<publishingServerId>central</publishingServerId>
 				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>license-maven-plugin</artifactId>
+				<version>1.17</version>
+
+				<configuration>
+					<addJavaLicenseAfterPackage>false</addJavaLicenseAfterPackage>
+					<processStartTag>========================LICENSE_START=================================</processStartTag>
+					<processEndTag>=========================LICENSE_END==================================</processEndTag>
+					<includes>
+						<includes>**/*.java</includes>
+					</includes>
+				</configuration>
+
+				<executions>
+					<execution>
+						<id>generate-license-headers</id>
+						<goals>
+							<goal>update-file-header</goal>
+						</goals>
+						<phase>process-sources</phase>
+						<configuration>
+							<licenseName>apache_v2</licenseName>
+						</configuration>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 	</build>

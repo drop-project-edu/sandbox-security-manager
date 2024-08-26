@@ -25,4 +25,4 @@ Now, just set the security manager when calling your application like this:
 
 ## Remarks
 
-Since this usually runs within Drop Project, it is expecting an environment variable `DP_MVN_REPO`
+Since this usually runs within Drop Project, it is expecting a system property `dropProject.maven.repository`

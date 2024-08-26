@@ -31,21 +31,19 @@ public class SandboxSecurityManager extends SecurityManager {
 
     private String workingFolder;
     private String javaHome;
-    private String mvnRepository;
+    private String mavenRepository;
 
     private boolean debug = false;
 
     public SandboxSecurityManager() {
         this.workingFolder = new File("").getAbsolutePath();
         this.javaHome = System.getProperty("java.home");
-        this.mvnRepository = System.getProperty("DP_MVN_REPO");
-        if (this.mvnRepository == null) {
-            this.mvnRepository = System.getenv("DP_MVN_REPO");
-        }
-
-        if (System.getProperty("dropproject.securityManager.debug") != null) {
+        this.mavenRepository = System.getProperty("dropProject.maven.repository");
+        if (System.getProperty("dropProject.securityManager.debug") != null) {
             debug = true;
-            System.out.println("Using SandboxedSecurityManager");
+            System.out.println("Using SandboxedSecurityManager with\n" +
+                    "\tjava.home=" + javaHome + "\n" +
+                    "\tmaven.repository=" + mavenRepository);
         }
     }
 
@@ -127,13 +125,15 @@ public class SandboxSecurityManager extends SecurityManager {
     }
 
     private boolean checkIllegalPath(String file) {
+
+        // allow access to files in the maven repository
+        // this is needed for example by junit5
+        if (mavenRepository != null && file.startsWith(mavenRepository)) {
+            return false;
+        }
+
         return file.startsWith("/") &&
-                !(
-                    file.startsWith(workingFolder) ||
-                    file.startsWith(javaHome) ||
-                    file.equals(RANDOM) ||
-                    (mvnRepository != null && file.startsWith(mvnRepository))
-                )
+                !(file.startsWith(workingFolder) || file.startsWith(javaHome) || file.equals(RANDOM))
                 || file.startsWith("..")
                 || file.startsWith("\\");
     }

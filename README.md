@@ -16,7 +16,7 @@ Include the following dependency on your pom file:
     <dependency>
 	    <groupId>org.dropproject</groupId>
 	    <artifactId>drop-project-security-manager</artifactId>
-	    <version>0.2.2</version>
+	    <version>0.2.4</version>
 	</dependency>
 	
 Now, just set the security manager when calling your application like this:

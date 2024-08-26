@@ -28,6 +28,7 @@ import java.security.Permission;
 public class SandboxSecurityManager extends SecurityManager {
 
     public static final String RANDOM = "/dev/random";
+    public static final String URANDOM = "/dev/urandom";
 
     private String workingFolder;
     private String javaHome;
@@ -133,7 +134,10 @@ public class SandboxSecurityManager extends SecurityManager {
         }
 
         return file.startsWith("/") &&
-                !(file.startsWith(workingFolder) || file.startsWith(javaHome) || file.equals(RANDOM))
+                !(file.startsWith(workingFolder) ||
+                        file.startsWith(javaHome) ||
+                        file.equals(RANDOM) ||
+                        file.equals(URANDOM))
                 || file.startsWith("..")
                 || file.startsWith("\\");
     }
